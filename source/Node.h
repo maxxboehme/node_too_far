@@ -3,6 +3,8 @@
 #define __NODE__
 
 #include <iostream>
+#include <vector>
+#include <unordered_map>
 
 void node_too_far_solve(std::istream& in, std::ostream& out);
 

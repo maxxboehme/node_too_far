@@ -19,8 +19,8 @@ test: $(SRC_DIR)/Node.h $(SRC_DIR)/Node.cpp $(SRC_DIR)/UnitTests.cpp
 
 judge: $(SRC_DIR)/main.cpp $(SRC_DIR)/Node.cpp
 	@mkdir -p judge
-	@python $(TOOLS_DIR)/judge.py -s $(SRC_DIR)/Node.cpp --header $(SRC_DIR)/Node.h -o $(JUDGE_DIR)/Node.cpp
-	@grep -A500 "int main" $(SRC_DIR)/main.cpp >> ./judge/Node.cpp
+	@sed -e '/#include "prints.h"/d' $(SRC_DIR)/Node.cpp > $(JUDGE_DIR)/Node.cpp
+	@grep -A500 "int main" $(SRC_DIR)/main.cpp >> $(JUDGE_DIR)/Node.cpp
 
 clean:
 	rm -f main
