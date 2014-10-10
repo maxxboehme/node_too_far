@@ -118,3 +118,75 @@ TEST(Node, solve_2){
                      "Case 6: 1 nodes not reachable from node 3 with TTL = 3.\n");
 }
 
+TEST(Node, solve_3){
+  std::istringstream r("16\n"
+                       "10 15   15 20   20 25   10 30   30 47   47 50   25 45   45 65\n"
+                       "15 35   35 55   20 40   50 55   35 40   55 60   40 60   60 65\n"
+                       "35  2   35  0    0  0\n\n"
+                       "14\n"
+                       "1 2   2 7   1 3   3 4   3 5   5 10   5 11\n"
+                       "4 6   7 6   7 8   7 9   8 9   8  6   6 11\n"
+                       "1 1   1 2   3 2   3 3   0 0\n\n"
+                       "0");
+  std::ostringstream w;
+  node_too_far_solve(r, w);
+  ASSERT_EQ(w.str(), "Case 1: 5 nodes not reachable from node 35 with TTL = 2.\n"
+                     "Case 2: 12 nodes not reachable from node 35 with TTL = 0.\n"
+                     "Case 3: 8 nodes not reachable from node 1 with TTL = 1.\n"
+                     "Case 4: 5 nodes not reachable from node 1 with TTL = 2.\n"
+                     "Case 5: 3 nodes not reachable from node 3 with TTL = 2.\n"
+                     "Case 6: 1 nodes not reachable from node 3 with TTL = 3.\n");
+}
+
+TEST(Node, solve_4){
+  std::istringstream r("16\n"
+                       "10 15   15 20   20 25   10 30   30 47   47 50   25 45   45 65\n"
+                       "15 35   35 55   20 40   50 55   35 40   55 60   40 60   60 65\n"
+                       "35  2   1  3    0  0\n\n"
+                       "14\n"
+                       "1 2   2 7   1 3   3 4   3 5   5 10   5 11\n"
+                       "4 6   7 6   7 8   7 9   8 9   8  6   6 11\n"
+                       "1 1   1 2   3 2   3 3   0 0\n\n"
+                       "0");
+  std::ostringstream w;
+  node_too_far_solve(r, w);
+  ASSERT_EQ(w.str(), "Case 1: 5 nodes not reachable from node 35 with TTL = 2.\n"
+                     "Case 2: 13 nodes not reachable from node 1 with TTL = 3.\n"
+                     "Case 3: 8 nodes not reachable from node 1 with TTL = 1.\n"
+                     "Case 4: 5 nodes not reachable from node 1 with TTL = 2.\n"
+                     "Case 5: 3 nodes not reachable from node 3 with TTL = 2.\n"
+                     "Case 6: 1 nodes not reachable from node 3 with TTL = 3.\n");
+}
+
+TEST(Node, solve_5){
+  std::istringstream r("16\n"
+                       "10 15   15 20   20 25   10 30   30 47   47 50   25 45   45 65\n"
+                       "15 35   35 55   20 40   50 55   35 40   55 60   40 60   60 65\n\n\n"
+                       "35  2   35  50   0  0\n\n\n\n\n"
+                       "14\n\n\n\n\n"
+                       "1 2   2 7   1 3   3 4   3 5   5 10   5 11\n"
+                       "4 6   7 6   7 8   7 9   8 9   8  6   6 11\n"
+                       "1 1   1 2   3 2   3 3   0 0\n\n"
+                       "0\n\n");
+  std::ostringstream w;
+  node_too_far_solve(r, w);
+  ASSERT_EQ(w.str(), "Case 1: 5 nodes not reachable from node 35 with TTL = 2.\n"
+                     "Case 2: 0 nodes not reachable from node 35 with TTL = 50.\n"
+                     "Case 3: 8 nodes not reachable from node 1 with TTL = 1.\n"
+                     "Case 4: 5 nodes not reachable from node 1 with TTL = 2.\n"
+                     "Case 5: 3 nodes not reachable from node 3 with TTL = 2.\n"
+                     "Case 6: 1 nodes not reachable from node 3 with TTL = 3.\n");
+}
+
+TEST(Node, solve_6){
+  std::istringstream r("10\n"
+                       "1 2 1 3 3 5 2 5 3 4 5 4 6 4 7 10 10 9 8 9\n"
+                       "2 3 7 2 10 1 0 0\n"
+                       "0");
+  std::ostringstream w;
+  node_too_far_solve(r, w);
+  ASSERT_EQ(w.str(), "Case 1: 4 nodes not reachable from node 2 with TTL = 3.\n"
+                     "Case 2: 7 nodes not reachable from node 7 with TTL = 2.\n"
+                     "Case 3: 7 nodes not reachable from node 10 with TTL = 1.\n");
+}
+

@@ -59,11 +59,14 @@ void print_results(std::ostream& out, int caseNumber, int numberNotReachable, in
 }
 
 int breath_first_search(std::unordered_map<int, std::vector<int> >& graph, int start, int ttl){
+   if(graph.find(start) == graph.end())
+      return 0;
    std::unordered_set<int> visited;
    std::unordered_map<int, int> cost;
    
    std::queue<int> fringe;
    fringe.push(start);
+
    cost[start] = 0;
    int reachable = 0;
    while(!fringe.empty()){
@@ -75,7 +78,7 @@ int breath_first_search(std::unordered_map<int, std::vector<int> >& graph, int s
          if((ttl - cost[node]) > 0){
             std::vector<int> children = graph[node];
             for(int child: children){
-               if(visited.find(child) == visited.end()){
+               if(visited.find(child) == visited.end() && !cost[child]){
                   cost[child] = cost[node] + 1;
                   fringe.push(child);
                }

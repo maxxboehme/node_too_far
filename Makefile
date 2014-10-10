@@ -22,6 +22,9 @@ judge: $(SRC_DIR)/main.cpp $(SRC_DIR)/Node.cpp
 	@sed -e '/#include "prints.h"/d' $(SRC_DIR)/Node.cpp > $(JUDGE_DIR)/Node.cpp
 	@grep -A500 "int main" $(SRC_DIR)/main.cpp >> $(JUDGE_DIR)/Node.cpp
 
+other: ./other.cpp
+	g++ -pedantic -std=c++11 -Wall $(filter %.cpp, $^) -o other
+
 clean:
 	rm -f main
 	rm -f test
