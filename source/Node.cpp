@@ -4,44 +4,28 @@
 #include <utility>
 #include <unordered_set>
 #include <queue>
+#include <array>
+#include <cstring>
 
 #include "prints.h"
 
-void read_graph(std::istream& in, int numberOfPairs, std::unordered_map<int, std::vector<int> >& graph){
+void read_graph(std::istream& in, int numberOfPairs, std::array<std::vector<int>, 31>& graph, std::unordered_map<int, int>& mapToIndex){
    int node1;
    int node2;
-   while(--numberOfPairs >= 0 && in >> node1 >> node2){
-      //std::cout << node1 << " " << node2 << std::endl;
-      std::unordered_map<int, std::vector<int> >::iterator got = graph.find(node1);
-      if(got == graph.end()){
-          std::vector<int> temp;
-          temp.push_back(node2);
-          graph.emplace(node1, temp);
-      } else {
-         std::vector<int>& children = got->second;
-         children.push_back(node2);
-         //std::cout << children << std::endl;
-      }
-      got = graph.find(node2);
-      if(got == graph.end()){
-         std::vector<int> temp;
-         temp.push_back(node1);
-         graph.emplace(node2, temp);
-      } else {
-         std::vector<int>& children = got->second;
-         children.push_back(node1);
-        // std::cout << children << std::endl;
-      }
 
-   }
-}
-
-void read_graph2(std::istream& in, int numberOfPairs, std::unordered_map<int, std::vector<int> >& graph){
-   int node1;
-   int node2;
+   int index = 1;
    while(--numberOfPairs >= 0 && in >> node1 >> node2){
-      graph[node1].push_back(node2);
-      graph[node2].push_back(node1);
+      if(!mapToIndex[node1]) {
+         mapToIndex[node1] = index++;
+      }
+      if(!mapToIndex[node2]) {
+         mapToIndex[node2] = index++;
+      }
+      graph[mapToIndex[node1]].push_back(mapToIndex[node2]);
+      graph[mapToIndex[node2]].push_back(mapToIndex[node1]);
+      //std::cout << mapToIndex << std::endl;
+      //ArrayToStream(std::cout, graph);
+      //std::cout << std::endl;
    }
 }
 
@@ -58,30 +42,26 @@ void print_results(std::ostream& out, int caseNumber, int numberNotReachable, in
    out << "Case " << caseNumber << ": " << numberNotReachable << " nodes not reachable from node " << startingNode << " with TTL = " << ttl << "." << std::endl;
 }
 
-int breath_first_search(std::unordered_map<int, std::vector<int> >& graph, int start, int ttl){
-   if(graph.find(start) == graph.end())
+int breath_first_search(std::array<std::vector<int>, 31>& graph, std::unordered_map<int, int>& mappingToIndex, int start, int ttl){
+   if(mappingToIndex.find(start) == mappingToIndex.end())
       return 0;
-   std::unordered_set<int> visited;
-   std::unordered_map<int, int> cost;
+   int cost[31];
+   memset (cost, -1, sizeof (cost));
    
    std::queue<int> fringe;
-   fringe.push(start);
+   fringe.push(mappingToIndex[start]);
 
-   cost[start] = 0;
+   cost[mappingToIndex[start]] = 0;
    int reachable = 0;
    while(!fringe.empty()){
       int node = fringe.front();
       fringe.pop();
-      if(visited.find(node) == visited.end()){
-         visited.insert(node);
-         ++reachable;
-         if((ttl - cost[node]) > 0){
-            std::vector<int> children = graph[node];
-            for(int child: children){
-               if(visited.find(child) == visited.end() && !cost[child]){
-                  cost[child] = cost[node] + 1;
-                  fringe.push(child);
-               }
+      ++reachable;
+      if((ttl - cost[node]) > 0){
+         for(int child: graph[node]){
+            if(cost[child] == -1){
+               cost[child] = cost[node] + 1;
+               fringe.push(child);
             }
          }
       }
@@ -91,22 +71,24 @@ int breath_first_search(std::unordered_map<int, std::vector<int> >& graph, int s
 
 
 void node_too_far_solve(std::istream& in, std::ostream& out){
+   // turn off synchronization with C I/O
+   std::ios_base::sync_with_stdio(false);
+   
    int numberOfPairs = 0;
    int caseNumber = 0;
    
-   in >> numberOfPairs;
-   while(numberOfPairs){
+   while(in >> numberOfPairs && numberOfPairs){
       //std::cout << "Number of Pairs: " << numberOfPairs << std::endl;
-      std::unordered_map<int, std::vector<int> > graph;
-      read_graph2(in, numberOfPairs, graph);
-      int graphSize = graph.size();
+      std::array<std::vector<int>, 31> graph;
+      std::unordered_map<int, int> mappingToIndex;
+      read_graph(in, numberOfPairs, graph, mappingToIndex);
+      int graphSize = mappingToIndex.size();
       //std::cout << "graph size: " << graphSize << std::endl;
       std::pair<int, int> p;
       while(read_query(in, p)){
           //std::cout << "Node: " << p.first << " ttl: " << p.second << std::endl;
-          int result = breath_first_search(graph, p.first, p.second);
+          int result = breath_first_search(graph, mappingToIndex, p.first, p.second);
           print_results(out, ++caseNumber, graphSize - result, p.first, p.second);
       }
-      in >> numberOfPairs;
    }
 }

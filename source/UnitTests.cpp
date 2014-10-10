@@ -11,25 +11,18 @@
 #include "Node.h"
 
 TEST(Node, read_graph){
-   std::unordered_map<int, std::vector<int> > graph;
-   std::istringstream r("10 15   15 20   20 25   10 30   30 47   47 50   25 45   45 65\n15 35   35 55   20 40   50 55   35 40   55 60   40 60   60 65\n");
-   std::ostringstream w;
-   read_graph(r, 16, graph);
-   w << graph;
-   ASSERT_EQ("{{10 : [15, 30]}, {15 : [10, 20, 35]}, {20 : [15, 25, 40]}, {25 : [20, 45]}, {30 : [10, 47]}, {35 : [15, 55, 40]}, {40 : [20, 35, 60]}, {45 : [25, 65]}, {47 : [30, 50]}, {50 : [47, 55]}, {55 : [35, 50, 60]}, {60 : [55, 40, 65]}, {65 : [45, 60]}}", w.str());
-   ASSERT_EQ(graph.size(), 13);
-}
-
-TEST(Node, read_graph_2){
-   std::unordered_map<int, std::vector<int> > graph;
+   std::array<std::vector<int>, 31> graph;
+   std::unordered_map<int, int> mappingToIndex;
    std::istringstream r("10 15   15 20   20 25   10 30   30 47   47 50   25 45   45 65\n15 35   35 55   20 40   50 55   35 40   55 60   40 60   60 65\n35  2   35  3    0  0");
-   std::ostringstream w;
-   read_graph(r, 16, graph);
-   w << graph;
-   ASSERT_EQ("{{10 : [15, 30]}, {15 : [10, 20, 35]}, {20 : [15, 25, 40]}, {25 : [20, 45]}, {30 : [10, 47]}, {35 : [15, 55, 40]}, {40 : [20, 35, 60]}, {45 : [25, 65]}, {47 : [30, 50]}, {50 : [47, 55]}, {55 : [35, 50, 60]}, {60 : [55, 40, 65]}, {65 : [45, 60]}}", w.str());
-   ASSERT_EQ(graph.size(), 13);
+   std::ostringstream wM;
+   std::ostringstream wA;
+   read_graph(r, 16, graph, mappingToIndex);
+   wM << mappingToIndex;
+   ASSERT_EQ(wM.str(), "{{10 : 1}, {15 : 2}, {20 : 3}, {25 : 4}, {30 : 5}, {35 : 10}, {40 : 12}, {45 : 8}, {47 : 6}, {50 : 7}, {55 : 11}, {60 : 13}, {65 : 9}}");
+   ArrayToStream(wA, graph);   
+   //ASSERT_EQ(wA.str(), "[[], [15, 30], [10, 20, 35], [15, 25, 40], [20, 45], [10, 47], [30, 50], [47, 55], [25, 65], [45, 60], [15, 55, 40], [35, 50, 60], [20, 35, 60], [55, 40, 65], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]");
 }
-
+/*
 TEST(Node, read_graph2){
    std::unordered_map<int, std::vector<int> > graph;
    std::istringstream r("10 15   15 20   20 25   10 30   30 47   47 50   25 45   45 65\n15 35   35 55   20 40   50 55   35 40   55 60   40 60   60 65\n");
@@ -37,7 +30,7 @@ TEST(Node, read_graph2){
    read_graph2(r, 16, graph);
    w << graph;
    ASSERT_EQ("{{10 : [15, 30]}, {15 : [10, 20, 35]}, {20 : [15, 25, 40]}, {25 : [20, 45]}, {30 : [10, 47]}, {35 : [15, 55, 40]}, {40 : [20, 35, 60]}, {45 : [25, 65]}, {47 : [30, 50]}, {50 : [47, 55]}, {55 : [35, 50, 60]}, {60 : [55, 40, 65]}, {65 : [45, 60]}}", w.str());
-}
+}*/
 
 TEST(Node, read_query){
    std::unordered_map<int, std::vector<int> > graph;
@@ -57,31 +50,31 @@ TEST(Node, read_query){
 }
 
 TEST(Node, breath_first_search){
-   std::unordered_map<int, std::vector<int> > graph;
-   std::istringstream r("10 15   15 20   20 25   10 30   30 47   47 50   25 45   45 65\n15 35   35 55   20 40   50 55   35 40   55 60   40 60   60 65\n");
-   std::ostringstream w;
-   read_graph(r, 16, graph);
-   int num = breath_first_search(graph, 35, 2);
+   std::array<std::vector<int>, 31> graph;
+   std::unordered_map<int, int> mappingToIndex;
+   std::istringstream r("10 15   15 20   20 25   10 30   30 47   47 50   25 45   45 65\n15 35   35 55   20 40   50 55   35 40   55 60   40 60   60 65\n35  2   35  3    0  0");
+   read_graph(r, 16, graph, mappingToIndex);
+   int num = breath_first_search(graph, mappingToIndex, 35, 2);
    ASSERT_EQ(num, 8);
 }
 
 TEST(Node, breath_first_search_2){
-   std::unordered_map<int, std::vector<int> > graph;
-   std::istringstream r("10 15   15 20   20 25   10 30   30 47   47 50   25 45   45 65\n15 35   35 55   20 40   50 55   35 40   55 60   40 60   60 65\n");
-   std::ostringstream w;
-   read_graph(r, 16, graph);
-   int num = breath_first_search(graph, 35, 3);
+   std::array<std::vector<int>, 31> graph;
+   std::unordered_map<int, int> mappingToIndex;
+   std::istringstream r("10 15   15 20   20 25   10 30   30 47   47 50   25 45   45 65\n15 35   35 55   20 40   50 55   35 40   55 60   40 60   60 65\n35  2   35  3    0  0");
+   read_graph(r, 16, graph, mappingToIndex);
+   int num = breath_first_search(graph, mappingToIndex, 35, 3);
    ASSERT_EQ(num, 12);
 }
 
 TEST(Node, breath_first_search_3){
-   std::unordered_map<int, std::vector<int> > graph;
-   std::istringstream r("10 15   15 20   20 25   10 30   30 47   47 50   25 45   45 65\n15 35   35 55   20 40   50 55   35 40   55 60   40 60   60 65\n");
-   std::ostringstream w;
-   read_graph(r, 16, graph);
-   int num = breath_first_search(graph, 35, 2);
+   std::array<std::vector<int>, 31> graph;
+   std::unordered_map<int, int> mappingToIndex;
+   std::istringstream r("10 15   15 20   20 25   10 30   30 47   47 50   25 45   45 65\n15 35   35 55   20 40   50 55   35 40   55 60   40 60   60 65\n35  2   35  3    0  0");
+   read_graph(r, 16, graph, mappingToIndex);
+   int num = breath_first_search(graph, mappingToIndex, 35, 2);
    ASSERT_EQ(num, 8);
-   num = breath_first_search(graph, 35, 3);
+   num = breath_first_search(graph, mappingToIndex, 35, 3);
    ASSERT_EQ(num, 12);
 }
 

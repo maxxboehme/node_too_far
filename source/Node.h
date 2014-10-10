@@ -5,12 +5,12 @@
 #include <iostream>
 #include <vector>
 #include <unordered_map>
+#include <array>
 
 void node_too_far_solve(std::istream& in, std::ostream& out);
 
-void read_graph(std::istream& in, int numberOfPairs, std::unordered_map<int, std::vector<int> >& graph);
-void read_graph2(std::istream& in, int numberOfPairs, std::unordered_map<int, std::vector<int> >& graph);
+void read_graph(std::istream& in, int numberOfPairs, std::array<std::vector<int>, 31>& graph, std::unordered_map<int, int>& mappingToIndex);
 bool read_query(std::istream& in, std::pair<int, int>& pair);
-int breath_first_search(std::unordered_map<int, std::vector<int> >& graph, int start, int ttl);
+int breath_first_search(std::array<std::vector<int>, 31>& graph, std::unordered_map<int, int>& mappingToIndex, int start, int ttl);
 void print_results(std::ostream& out, int caseNumber, int numberNotReachable, int startingNode, int ttl);
 #endif
