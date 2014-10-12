@@ -9,7 +9,7 @@
 
 #include "prints.h"
 
-void read_graph(std::istream& in, int numberOfPairs, std::array<std::vector<int>, 31>& graph, std::unordered_map<int, int>& mapToIndex){
+void read_graph(std::istream& in, int numberOfPairs, int graph[][31], std::unordered_map<int, int>& mapToIndex){
    int node1;
    int node2;
 
@@ -21,8 +21,10 @@ void read_graph(std::istream& in, int numberOfPairs, std::array<std::vector<int>
       if(!mapToIndex[node2]) {
          mapToIndex[node2] = index++;
       }
-      graph[mapToIndex[node1]].push_back(mapToIndex[node2]);
-      graph[mapToIndex[node2]].push_back(mapToIndex[node1]);
+      graph[mapToIndex[node1]][mapToIndex[node2]] = 1;
+      graph[mapToIndex[node1]][mapToIndex[node1]] = 0;
+      graph[mapToIndex[node2]][mapToIndex[node1]] = 1;
+      graph[mapToIndex[node1]][mapToIndex[node1]] = 0;
       //std::cout << mapToIndex << std::endl;
       //ArrayToStream(std::cout, graph);
       //std::cout << std::endl;
@@ -40,6 +42,20 @@ bool read_query(std::istream& in, std::pair<int, int>& pair){
 
 void print_results(std::ostream& out, int caseNumber, int numberNotReachable, int startingNode, int ttl){
    out << "Case " << caseNumber << ": " << numberNotReachable << " nodes not reachable from node " << startingNode << " with TTL = " << ttl << "." << std::endl;
+}
+
+void floyd_warshall(int graph[][4], int numberOfNodes){
+   for(int k = 0; k < numberOfNodes; ++k){
+      for(int i = 0; i < numberOfNodes; ++i){
+         for(int j = 0; j < numberOfNodes; ++j){
+            if(graph[i][k] != -1 && graph[k][j] != -1){
+               if(graph[i][k] + graph[k][j] < graph[i][j]){
+                  graph[i][j] = graph[i][k] + graph[k][j];
+               }
+            }
+         }
+      }
+   }
 }
 
 int breath_first_search(std::array<std::vector<int>, 31>& graph, std::unordered_map<int, int>& mappingToIndex, int start, int ttl){
@@ -69,7 +85,7 @@ int breath_first_search(std::array<std::vector<int>, 31>& graph, std::unordered_
    return reachable;
 }
 
-
+/*
 void node_too_far_solve(std::istream& in, std::ostream& out){
    // turn off synchronization with C I/O
    std::ios_base::sync_with_stdio(false);
@@ -91,4 +107,4 @@ void node_too_far_solve(std::istream& in, std::ostream& out){
           print_results(out, ++caseNumber, graphSize - result, p.first, p.second);
       }
    }
-}
+}*/

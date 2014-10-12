@@ -22,7 +22,7 @@ inline std::ostream& operator<<(std::ostream& out, std::vector<T> v){
 }
 
 template <typename T>
-inline std::ostream& ArrayToStream(std::ostream& out, T* v, unsigned int size){
+inline std::ostream& ArrayToStream(std::ostream& out, T v[], unsigned int size){
    out << "[";
    if(size > 0){
       for(unsigned int i = 0; i < size-1; ++i){
@@ -31,6 +31,17 @@ inline std::ostream& ArrayToStream(std::ostream& out, T* v, unsigned int size){
       out << v[size-1];
    }
    return out << "]";
+}
+
+template <typename T, std::size_t SIZE>
+inline std::ostream& Array2DToStream(std::ostream& out, T v[][SIZE], unsigned int size){
+   if(size > 0){
+      for(unsigned int i = 0; i < size; ++i){
+         ArrayToStream(out, v[i], size);
+         out << std::endl;
+      }
+   }
+   return out;
 }
 
 template <typename T, std::size_t SIZE>
