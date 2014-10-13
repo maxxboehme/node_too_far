@@ -13,8 +13,8 @@
 #include "Node.h"
 
 TEST(Node, read_graph){
-   int graph[31][31];
-   for(int i = 0; i < 31; ++i)
+   int graph[30][30];
+   for(int i = 0; i < 30; ++i)
       memset(graph[i], -1, sizeof(graph[i]));
    std::unordered_map<int, int> mappingToIndex;
    std::istringstream r("10 15   15 20   20 25   10 30   30 47   47 50   25 45   45 65\n15 35   35 55   20 40   50 55   35 40   55 60   40 60   60 65\n35  2   35  3    0  0");
@@ -22,7 +22,7 @@ TEST(Node, read_graph){
    std::ostringstream wA;
    read_graph(r, 16, graph, mappingToIndex);
    wM << mappingToIndex;
-   ASSERT_EQ(wM.str(), "{{10 : 1}, {15 : 2}, {20 : 3}, {25 : 4}, {30 : 5}, {35 : 10}, {40 : 12}, {45 : 8}, {47 : 6}, {50 : 7}, {55 : 11}, {60 : 13}, {65 : 9}}");
+   ASSERT_EQ(wM.str(), "{{10 : 0}, {15 : 1}, {20 : 2}, {25 : 3}, {30 : 4}, {35 : 9}, {40 : 11}, {45 : 7}, {47 : 5}, {50 : 6}, {55 : 10}, {60 : 12}, {65 : 8}}");
    //Array2DToStream(std::cout, graph, 31);
    //ArrayToStream(wA, graph);
    //ASSERT_EQ(wA.str(), "[[], [15, 30], [10, 20, 35], [15, 25, 40], [20, 45], [10, 47], [30, 50], [47, 55], [25, 65], [45, 60], [15, 55, 40], [35, 50, 60], [20, 35, 60], [55, 40, 65], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]");
@@ -46,6 +46,7 @@ TEST(Node, read_query){
    ASSERT_EQ(p.second, 0);
 }
 
+/*
 TEST(Node, test){
   int graph[][4] = { {0,   5,  -1, 10},
                            {-1,  0,  3,  -1},
@@ -54,7 +55,8 @@ TEST(Node, test){
   //Array2DToStream(std::cout, graph, 4);
   floyd_warshall(graph, 4);
   Array2DToStream(std::cout, graph, 4);
-}
+}*/
+
 /*
 TEST(Node, floyd_warshall){
    unsigned int graph[31][31];
@@ -99,7 +101,7 @@ TEST(Node, breath_first_search_3){
    ASSERT_EQ(num, 8);
    num = breath_first_search(graph, mappingToIndex, 35, 3);
    ASSERT_EQ(num, 12);
-}
+}*/
 
 TEST(Node, print_results){
    std::ostringstream w;
@@ -204,5 +206,5 @@ TEST(Node, solve_6){
   ASSERT_EQ(w.str(), "Case 1: 4 nodes not reachable from node 2 with TTL = 3.\n"
                      "Case 2: 7 nodes not reachable from node 7 with TTL = 2.\n"
                      "Case 3: 7 nodes not reachable from node 10 with TTL = 1.\n");
-}*/
+}
 
