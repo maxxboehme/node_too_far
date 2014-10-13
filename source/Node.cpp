@@ -9,27 +9,24 @@
 
 #include "prints.h"
 
-void read_graph(std::istream& in, int numberOfPairs, std::array<std::vector<int>, 31>& graph, std::unordered_map<int, int>& mapToIndex){
+inline void read_graph(std::istream& in, int numberOfPairs, std::array<std::vector<int>, 30>& graph, std::unordered_map<int, int>& mapToIndex){
    int node1;
    int node2;
 
-   int index = 1;
+   int index = 0;
    while(--numberOfPairs >= 0 && in >> node1 >> node2){
-      if(!mapToIndex[node1]) {
+      if(mapToIndex.find(node1) == mapToIndex.end()) {
          mapToIndex[node1] = index++;
       }
-      if(!mapToIndex[node2]) {
+      if(mapToIndex.find(node2) == mapToIndex.end()) {
          mapToIndex[node2] = index++;
       }
       graph[mapToIndex[node1]].push_back(mapToIndex[node2]);
       graph[mapToIndex[node2]].push_back(mapToIndex[node1]);
-      //std::cout << mapToIndex << std::endl;
-      //ArrayToStream(std::cout, graph);
-      //std::cout << std::endl;
    }
 }
 
-bool read_query(std::istream& in, std::pair<int, int>& pair){
+inline bool read_query(std::istream& in, std::pair<int, int>& pair){
    in >> pair.first >> pair.second;
    if(pair.first || pair.second){
      return true;
@@ -38,14 +35,14 @@ bool read_query(std::istream& in, std::pair<int, int>& pair){
    }
 }
 
-void print_results(std::ostream& out, int caseNumber, int numberNotReachable, int startingNode, int ttl){
+inline void print_results(std::ostream& out, int caseNumber, int numberNotReachable, int startingNode, int ttl){
    out << "Case " << caseNumber << ": " << numberNotReachable << " nodes not reachable from node " << startingNode << " with TTL = " << ttl << "." << std::endl;
 }
 
-int breath_first_search(std::array<std::vector<int>, 31>& graph, std::unordered_map<int, int>& mappingToIndex, int start, int ttl){
+inline int breath_first_search(std::array<std::vector<int>, 30>& graph, std::unordered_map<int, int>& mappingToIndex, int start, int ttl){
    if(mappingToIndex.find(start) == mappingToIndex.end())
       return 0;
-   int cost[31];
+   int cost[30];
    memset (cost, -1, sizeof (cost));
    
    std::queue<int> fringe;
@@ -78,15 +75,12 @@ void node_too_far_solve(std::istream& in, std::ostream& out){
    int caseNumber = 0;
    
    while(in >> numberOfPairs && numberOfPairs){
-      //std::cout << "Number of Pairs: " << numberOfPairs << std::endl;
-      std::array<std::vector<int>, 31> graph;
+      std::array<std::vector<int>, 30> graph;
       std::unordered_map<int, int> mappingToIndex;
       read_graph(in, numberOfPairs, graph, mappingToIndex);
       int graphSize = mappingToIndex.size();
-      //std::cout << "graph size: " << graphSize << std::endl;
       std::pair<int, int> p;
       while(read_query(in, p)){
-          //std::cout << "Node: " << p.first << " ttl: " << p.second << std::endl;
           int result = breath_first_search(graph, mappingToIndex, p.first, p.second);
           print_results(out, ++caseNumber, graphSize - result, p.first, p.second);
       }

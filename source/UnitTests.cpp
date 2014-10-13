@@ -11,14 +11,14 @@
 #include "Node.h"
 
 TEST(Node, read_graph){
-   std::array<std::vector<int>, 31> graph;
+   std::array<std::vector<int>, 30> graph;
    std::unordered_map<int, int> mappingToIndex;
    std::istringstream r("10 15   15 20   20 25   10 30   30 47   47 50   25 45   45 65\n15 35   35 55   20 40   50 55   35 40   55 60   40 60   60 65\n35  2   35  3    0  0");
    std::ostringstream wM;
    std::ostringstream wA;
    read_graph(r, 16, graph, mappingToIndex);
    wM << mappingToIndex;
-   ASSERT_EQ(wM.str(), "{{10 : 1}, {15 : 2}, {20 : 3}, {25 : 4}, {30 : 5}, {35 : 10}, {40 : 12}, {45 : 8}, {47 : 6}, {50 : 7}, {55 : 11}, {60 : 13}, {65 : 9}}");
+   ASSERT_EQ(wM.str(), "{{10 : 0}, {15 : 1}, {20 : 2}, {25 : 3}, {30 : 4}, {35 : 9}, {40 : 11}, {45 : 7}, {47 : 5}, {50 : 6}, {55 : 10}, {60 : 12}, {65 : 8}}");
    ArrayToStream(wA, graph);   
    //ASSERT_EQ(wA.str(), "[[], [15, 30], [10, 20, 35], [15, 25, 40], [20, 45], [10, 47], [30, 50], [47, 55], [25, 65], [45, 60], [15, 55, 40], [35, 50, 60], [20, 35, 60], [55, 40, 65], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]");
 }
@@ -50,7 +50,7 @@ TEST(Node, read_query){
 }
 
 TEST(Node, breath_first_search){
-   std::array<std::vector<int>, 31> graph;
+   std::array<std::vector<int>, 30> graph;
    std::unordered_map<int, int> mappingToIndex;
    std::istringstream r("10 15   15 20   20 25   10 30   30 47   47 50   25 45   45 65\n15 35   35 55   20 40   50 55   35 40   55 60   40 60   60 65\n35  2   35  3    0  0");
    read_graph(r, 16, graph, mappingToIndex);
@@ -59,7 +59,7 @@ TEST(Node, breath_first_search){
 }
 
 TEST(Node, breath_first_search_2){
-   std::array<std::vector<int>, 31> graph;
+   std::array<std::vector<int>, 30> graph;
    std::unordered_map<int, int> mappingToIndex;
    std::istringstream r("10 15   15 20   20 25   10 30   30 47   47 50   25 45   45 65\n15 35   35 55   20 40   50 55   35 40   55 60   40 60   60 65\n35  2   35  3    0  0");
    read_graph(r, 16, graph, mappingToIndex);
@@ -68,7 +68,7 @@ TEST(Node, breath_first_search_2){
 }
 
 TEST(Node, breath_first_search_3){
-   std::array<std::vector<int>, 31> graph;
+   std::array<std::vector<int>, 30> graph;
    std::unordered_map<int, int> mappingToIndex;
    std::istringstream r("10 15   15 20   20 25   10 30   30 47   47 50   25 45   45 65\n15 35   35 55   20 40   50 55   35 40   55 60   40 60   60 65\n35  2   35  3    0  0");
    read_graph(r, 16, graph, mappingToIndex);
